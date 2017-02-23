@@ -32,7 +32,13 @@ module StatePattern
 
   def set_state(state_class = self.class.initial_state_class)
     return @current_state_instance if @current_state_instance.class == state_class
+    unless @current_state_instance.nil?
+      @previous_state = nil
+    end
     @current_state_instance = state_class.new(self, @current_state_instance)
+    # I need to reduce memory allocation, so I remove previous states from here because I don't need it.
+    # it was
+    # @current_state_instance = state_class.new(self, @current_state_instance)
   end
 
   def transition_to(next_state_class)
